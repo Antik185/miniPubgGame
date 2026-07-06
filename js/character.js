@@ -453,11 +453,10 @@ function solveArmIK(upperArm, foreArm, hand, target, pole, weight) {
 // трогаем — иначе чужая осанка гнёт торс вперёд, сжимает его и сводит плечи
 // к центру («обрезанные плечи»). Корпус остаётся в родной прямой bind-позе,
 // конечности от неё анимируются — визуально персонаж стоит как надо.
+// Ретаргетим ТОЛЬКО ноги. Руки НЕ трогаем совсем: без оружия они висят в
+// родной bind-позе по бокам, с оружием их ведёт IK хвата (Character.update).
+// Ретаргет рук от чужого рига заводил их внутрь корпуса — поэтому убран.
 const RETARGET_DIR_CHAIN = [
-  ['mixamorigLeftArm', 'mixamorigLeftForeArm'],
-  ['mixamorigLeftForeArm', 'mixamorigLeftHand'],
-  ['mixamorigRightArm', 'mixamorigRightForeArm'],
-  ['mixamorigRightForeArm', 'mixamorigRightHand'],
   ['mixamorigLeftUpLeg', 'mixamorigLeftLeg'],
   ['mixamorigLeftLeg', 'mixamorigLeftFoot'],
   ['mixamorigLeftFoot', 'mixamorigLeftToeBase'],
@@ -467,11 +466,9 @@ const RETARGET_DIR_CHAIN = [
 ];
 // Корпус, ноги, ступни и кисти — полная ориентация (дельта от rest-позы):
 // иначе теряется «крутка» вокруг оси и ботинки/ладони выворачивает.
-const RETARGET_DELTA_BONES = [
-  // Ступни сохраняют родной roll и направляются к toe-кости; абсолютная
-  // дельта нужна только кистям, чтобы после прицела не копилась скрутка.
-  'mixamorigLeftHand', 'mixamorigRightHand',
-];
+// Кисти тоже не ретаргетим: без оружия — родная поза, с оружием их
+// ориентацию задаёт IK хвата. Дельта-переносом кистей больше не пользуемся.
+const RETARGET_DELTA_BONES = [];
 
 const _dirWorld = new THREE.Vector3();
 const _hipsBasisX = new THREE.Vector3();
@@ -1313,6 +1310,17 @@ export class Character {
         this.gun.rotateX(this.weaponRecoil);
         this.weaponRecoil *= Math.exp(-dt * 17);
       }
+    } else if (this.cfg.liveRetarget && this.rightArm && this.leftArm && !this.procEmote && !this.eliminating) {
+      // Без оружия: bind-поза у 50 Cent — руки враскинутые (полу-T), поэтому
+      // опускаем кисти к бёдрам двухкостным IK. Локоть-цель — наружу-назад,
+      // чтобы предплечья шли вдоль тела, а не сквозь него.
+      const drop = this.crouchWeight * 0.12;
+      _worldTarget.set(-0.2, 0.86 - drop, 0.06); this.group.localToWorld(_worldTarget);
+      _worldPole.set(-0.6, 0.72, -0.16); this.group.localToWorld(_worldPole);
+      solveArmIK(this.rightArm, this.rightForeArm, this.hand, _worldTarget, _worldPole, 0.9);
+      _worldTarget.set(0.2, 0.86 - drop, 0.06); this.group.localToWorld(_worldTarget);
+      _worldPole.set(0.6, 0.72, -0.16); this.group.localToWorld(_worldPole);
+      solveArmIK(this.leftArm, this.leftForeArm, this.leftHand, _worldTarget, _worldPole, 0.9);
     }
   }
 }

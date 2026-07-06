@@ -1248,28 +1248,34 @@ export class Character {
       // Оружие ВСЕГДА держится обеими руками: низкая готовность (ствол чуть
       // вниз, у груди) → к плечу при прицеле. Верх тела при live-retarget
       // задаётся здесь, а не ретаргетом — иначе руки уходят внутрь корпуса.
+      // Правая кисть (рукоять): у груди по центру-справа и ВПЕРЁД от корпуса,
+      // чтобы предплечья не продавливали торс. При прицеле поднимается к плечу.
       if (this.rightArm) {
         _gunGripTarget.set(
-          isPistol ? -0.12 : -0.17,
-          (isPistol ? 1.0 : 1.04) + 0.16 * k - Math.sin(this.aimPitch) * 0.3 * k - this.crouchWeight * 0.22,
-          (isPistol ? 0.28 : 0.32) + 0.16 * k
+          isPistol ? -0.1 : -0.13,
+          (isPistol ? 1.12 : 1.16) + 0.1 * k - Math.sin(this.aimPitch) * 0.3 * k - this.crouchWeight * 0.22,
+          (isPistol ? 0.34 : 0.36) + 0.12 * k
         );
         this.group.localToWorld(_gunGripTarget);
-        _worldPole.set(-0.52, 0.86 - this.crouchWeight * 0.2, 0.1);
+        // локоть наружу-вниз-назад (не внутрь корпуса)
+        _worldPole.set(-0.62, 0.98 - this.crouchWeight * 0.2, -0.1);
         this.group.localToWorld(_worldPole);
         solveArmIK(this.rightArm, this.rightForeArm, this.hand, _gunGripTarget, _worldPole, 0.94);
       }
-      // ствол: в низкой готовности чуть вниз, при прицеле — точно по камере
-      const holdPitch = 0.22 * (1 - k) + this.aimPitch * k;
-      orientHandForGun(this.gun, this.hand, this.group, holdPitch, Math.PI, 0, 1);
+      // ствол: в низкой готовности по диагонали (ствол чуть влево и вниз),
+      // при прицеле — ровно по камере. Диагональ уводит цевьё влево, чтобы
+      // левая рука брала его НЕ пересекая грудь.
+      const holdPitch = 0.14 * (1 - k) + this.aimPitch * k;
+      const holdYaw = Math.PI + 0.34 * (1 - k);
+      orientHandForGun(this.gun, this.hand, this.group, holdPitch, holdYaw, 0, 1);
       seatGunGripAtSocket(this.gun);
       this.gun.updateWorldMatrix(true, true);
-      // левая рука всегда на цевье (у пистолета — слабее, ближе к телу)
+      // левая рука на цевье — локоть широко наружу-влево, чтобы не входить в тело
       if (this.leftArm) {
         const support = this.gun.getObjectByName('supportGrip');
         if (support) support.getWorldPosition(_worldTarget);
         else this.gun.localToWorld(_worldTarget.set(0, 0, isPistol ? -0.09 : -0.19));
-        _worldPole.set(0.5, 0.86 - this.crouchWeight * 0.2, 0.16);
+        _worldPole.set(0.66, 0.96 - this.crouchWeight * 0.2, 0.02);
         this.group.localToWorld(_worldPole);
         solveArmIK(this.leftArm, this.leftForeArm, this.leftHand, _worldTarget, _worldPole, isPistol ? 0.66 : 0.86);
       }

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Батл-рояль 3D</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.168.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.168.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<div id="loading">
+  <div class="load-box">
+    <h2>Загрузка мира...</h2>
+    <div class="bar"><div id="loadBar"></div></div>
+    <p id="loadText">0%</p>
+  </div>
+</div>
+
+<div id="hud">
+  <div id="topLeft" class="panel">
+    <label>Персонаж</label>
+    <select id="charSelect"></select>
+    <button id="emoteBtn">&#128131; Эмоции <span class="key">B</span></button>
+  </div>
+
+  <div id="zoneInfo" class="panel">Зона</div>
+
+  <div id="topRight">
+    <div class="panel" id="statsRow"><span id="fps">-- fps</span> &nbsp;|&nbsp; <span id="players">Игроков: -</span> &nbsp;|&nbsp; <span id="killCount">☠ 0</span></div>
+    <canvas id="minimap" width="150" height="150"></canvas>
+  </div>
+
+  <div id="crosshair"><span></span><span></span><span></span><span></span></div>
+
+  <div id="pickupHint" class="hidden"><span class="key">E</span> Подобрать</div>
+  <div id="killMsg" class="hidden"></div>
+
+  <div id="hotbar"></div>
+  <div id="ammoHud" class="hidden">
+    <span id="magAmmo">0</span><span class="ammo-sep">/</span><span id="reserveAmmo">0</span>
+    <small id="reloadLabel"></small>
+  </div>
+
+  <div id="vitals">
+    <div class="vbar" id="armorBar"><div id="armorFill"></div><span id="armorText">0</span></div>
+    <div class="vbar" id="hpBar"><div id="hpFill"></div><span id="hpText">100</span></div>
+  </div>
+
+  <div id="stamina" class="hidden">
+    <div class="stamina-label"><span>БЕГ</span><span id="staminaText">100</span></div>
+    <div class="stamina-track"><div id="staminaFill"></div></div>
+  </div>
+
+  <div id="controls" class="panel">
+    <b>Управление</b><br>
+    <span class="key">WASD</span> движение &nbsp; <span class="key">Shift</span> вкл/выкл бег &nbsp; <span class="key">Space</span> прыжок / залезть<br>
+    <span class="key">Ctrl</span> присесть / подкат в беге &nbsp; <span class="key">ЛКМ</span> огонь / использовать<br>
+    <span class="key">ПКМ</span> прицел &nbsp; <span class="key">R</span> перезарядка &nbsp; <span class="key">E</span> подобрать &nbsp; <span class="key">1-5</span> слоты &nbsp; <span class="key">B</span> эмоции
+  </div>
+
+  <div id="clickHint">Кликни, чтобы играть</div>
+
+  <div id="emoteWheel" class="hidden">
+    <div id="wheelCenter">Эмоции<br><small>цифра или клик</small></div>
+  </div>
+
+  <div id="stormOverlay"></div>
+  <div id="scopeOverlay" class="hidden">
+    <div class="scope-line h"></div>
+    <div class="scope-line v"></div>
+  </div>
+  <div id="hitVignette"></div>
+
+  <div id="endScreen" class="hidden">
+    <h1 id="endTitle">ПОБЕДА!</h1>
+    <p id="endSub"></p>
+    <button id="restartBtn">Играть ещё раз</button>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

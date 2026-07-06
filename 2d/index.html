@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Королевская битва</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="menu" class="overlay">
+  <div class="panel">
+    <h1>&#9876; КОРОЛЕВСКАЯ БИТВА</h1>
+    <p class="sub">24 бойца. Зона сужается. Выживет только один.</p>
+    <label>Имя бойца</label>
+    <input id="nameInput" maxlength="14" value="Боец" autocomplete="off">
+    <label>Цвет формы</label>
+    <div id="colors"></div>
+    <button id="playBtn">ИГРАТЬ</button>
+    <div class="controls">
+      <b>Управление:</b><br>
+      WASD — движение &middot; Мышь — прицел &middot; ЛКМ — огонь<br>
+      E — подобрать &middot; R — перезарядка &middot; G — выбросить<br>
+      1-5 / колесо — слоты &middot; F — аптечка &middot; Shift — бег
+    </div>
+  </div>
+</div>
+
+<div id="endScreen" class="overlay hidden">
+  <div class="panel">
+    <h1 id="endTitle"></h1>
+    <p id="endStats" class="sub"></p>
+    <button id="restartBtn">ЕЩЁ РАЗ</button>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/world.js"></script>
+<script src="js/entities.js"></script>
+<script src="js/bots.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

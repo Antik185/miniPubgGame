@@ -1,0 +1,15 @@
+# Локальные настройки Claude Code (машинно-зависимые)
+.claude/settings.local.json
+
+# Временные артефакты отладки (сервер скриншотов и т.п.)
+.claude/save-server.js
+.claude/shot.jpg
+.claude/shot.b64
+
+# ОС/редакторы
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Node
+node_modules/

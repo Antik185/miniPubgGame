@@ -1,0 +1,58 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; background: #1a2417; font-family: 'Segoe UI', Arial, sans-serif; }
+#game { display: block; cursor: crosshair; }
+
+.overlay {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(8, 14, 8, 0.65);
+}
+.overlay.hidden { display: none; }
+
+.panel {
+  background: #1f2b1c;
+  border: 2px solid #3d5233;
+  border-radius: 14px;
+  padding: 32px 40px;
+  color: #e8f0e0;
+  text-align: center;
+  box-shadow: 0 12px 60px rgba(0, 0, 0, 0.6);
+  width: 440px;
+  max-width: 92vw;
+}
+h1 { margin-bottom: 6px; letter-spacing: 2px; font-size: 26px; }
+.sub { color: #9fb58f; margin-bottom: 18px; font-size: 15px; }
+
+label {
+  display: block; text-align: left;
+  margin: 12px 0 5px; color: #9fb58f;
+  font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
+}
+#nameInput {
+  width: 100%; padding: 10px 12px;
+  border-radius: 8px; border: 1px solid #3d5233;
+  background: #141c11; color: #fff; font-size: 16px; outline: none;
+}
+#nameInput:focus { border-color: #e3a52a; }
+
+#colors { display: flex; gap: 8px; margin-bottom: 6px; }
+.swatch {
+  width: 34px; height: 34px; border-radius: 50%;
+  cursor: pointer; border: 3px solid transparent;
+  transition: transform 0.1s;
+}
+.swatch:hover { transform: scale(1.15); }
+.swatch.sel { border-color: #fff; transform: scale(1.15); }
+
+button {
+  margin-top: 20px; width: 100%; padding: 14px;
+  font-size: 18px; font-weight: bold; letter-spacing: 1px;
+  border: none; border-radius: 8px;
+  background: #e3a52a; color: #241a05; cursor: pointer;
+}
+button:hover { background: #f0b83e; }
+
+.controls { margin-top: 18px; font-size: 13px; color: #9fb58f; line-height: 1.8; }
+
+#endScreen { background: rgba(8, 14, 8, 0.45); }
+#endScreen .panel { background: rgba(31, 43, 28, 0.94); }

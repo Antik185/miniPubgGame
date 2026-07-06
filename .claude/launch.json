@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "game",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "http-server", "-p", "8347", "-c-1", "."],
+      "port": 8347
+    },
+    {
+      "name": "game-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "http-server", "-p", "8348", "-c-1", "."],
+      "port": 8348
+    }
+  ]
+}

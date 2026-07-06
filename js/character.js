@@ -1245,33 +1245,33 @@ export class Character {
         }
         return;
       }
-      if (k > 0.01 && this.rightArm) {
+      // Оружие ВСЕГДА держится обеими руками: низкая готовность (ствол чуть
+      // вниз, у груди) → к плечу при прицеле. Верх тела при live-retarget
+      // задаётся здесь, а не ретаргетом — иначе руки уходят внутрь корпуса.
+      if (this.rightArm) {
         _gunGripTarget.set(
-          -0.18,
-          1.12 + 0.12 * k - Math.sin(this.aimPitch) * 0.3 * k - this.crouchWeight * 0.22,
-          0.34 + 0.14 * k
+          isPistol ? -0.12 : -0.17,
+          (isPistol ? 1.0 : 1.04) + 0.16 * k - Math.sin(this.aimPitch) * 0.3 * k - this.crouchWeight * 0.22,
+          (isPistol ? 0.28 : 0.32) + 0.16 * k
         );
         this.group.localToWorld(_gunGripTarget);
-        _worldPole.set(-0.5, 0.95 - this.crouchWeight * 0.2, 0.15);
+        _worldPole.set(-0.52, 0.86 - this.crouchWeight * 0.2, 0.1);
         this.group.localToWorld(_worldPole);
-        solveArmIK(this.rightArm, this.rightForeArm, this.hand, _gunGripTarget, _worldPole, k * 0.9);
+        solveArmIK(this.rightArm, this.rightForeArm, this.hand, _gunGripTarget, _worldPole, 0.94);
       }
-      // ориентация: ствол всегда стабильно вперёд (позиция едет с кистью),
-      // при прицеле — тангаж камеры
-      // В обычной стойке оружие остаётся продолжением кисти. Только при
-      // прицеливании поворачиваем саму кисть к направлению камеры.
-      orientHandForGun(this.gun, this.hand, this.group, this.aimPitch, Math.PI, 0, k);
+      // ствол: в низкой готовности чуть вниз, при прицеле — точно по камере
+      const holdPitch = 0.22 * (1 - k) + this.aimPitch * k;
+      orientHandForGun(this.gun, this.hand, this.group, holdPitch, Math.PI, 0, 1);
       seatGunGripAtSocket(this.gun);
       this.gun.updateWorldMatrix(true, true);
-      // левая рука берёт цевьё только при прицеле — в беге руки машут свободно
-      const supportW = k * (isPistol ? 0.8 : 0.92);
-      if (supportW > 0.02 && this.leftArm) {
+      // левая рука всегда на цевье (у пистолета — слабее, ближе к телу)
+      if (this.leftArm) {
         const support = this.gun.getObjectByName('supportGrip');
         if (support) support.getWorldPosition(_worldTarget);
         else this.gun.localToWorld(_worldTarget.set(0, 0, isPistol ? -0.09 : -0.19));
-        _worldPole.set(0.46, 0.92 - this.crouchWeight * 0.2, 0.24);
+        _worldPole.set(0.5, 0.86 - this.crouchWeight * 0.2, 0.16);
         this.group.localToWorld(_worldPole);
-        solveArmIK(this.leftArm, this.leftForeArm, this.leftHand, _worldTarget, _worldPole, supportW);
+        solveArmIK(this.leftArm, this.leftForeArm, this.leftHand, _worldTarget, _worldPole, isPistol ? 0.66 : 0.86);
       }
       if (this.weaponRecoil > 0.001) {
         this.gun.rotateX(this.weaponRecoil);

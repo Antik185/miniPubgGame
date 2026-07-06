@@ -449,16 +449,13 @@ function solveArmIK(upperArm, foreArm, hand, target, pole, weight) {
 // каждый кадр доворачиваются так, чтобы их сегменты повторяли направления
 // сегментов драйвера. Работает с любым ригом: UE3, Unity, кастомным.
 // Руки переносим по направлениям сегментов (устойчиво к разнице T/A-поз)
+// Ретаргетим ТОЛЬКО руки (от плеча) и ноги. Позвоночник, шею и ключицы НЕ
+// трогаем — иначе чужая осанка гнёт торс вперёд, сжимает его и сводит плечи
+// к центру («обрезанные плечи»). Корпус остаётся в родной прямой bind-позе,
+// конечности от неё анимируются — визуально персонаж стоит как надо.
 const RETARGET_DIR_CHAIN = [
-  ['mixamorigHips', 'mixamorigSpine'],
-  ['mixamorigSpine', 'mixamorigSpine1'],
-  ['mixamorigSpine1', 'mixamorigSpine2'],
-  ['mixamorigSpine2', 'mixamorigNeck'],
-  ['mixamorigNeck', 'mixamorigHead'],
-  ['mixamorigLeftShoulder', 'mixamorigLeftArm'],
   ['mixamorigLeftArm', 'mixamorigLeftForeArm'],
   ['mixamorigLeftForeArm', 'mixamorigLeftHand'],
-  ['mixamorigRightShoulder', 'mixamorigRightArm'],
   ['mixamorigRightArm', 'mixamorigRightForeArm'],
   ['mixamorigRightForeArm', 'mixamorigRightHand'],
   ['mixamorigLeftUpLeg', 'mixamorigLeftLeg'],
